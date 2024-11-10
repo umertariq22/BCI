@@ -10,23 +10,23 @@ import { useRouter } from 'next/navigation';
 const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordFieldType, setPasswordFieldType] = useState<string>('password');
   const [error, setError] = useState<string | null>(null);
   const [checked, setChecked] = useState<boolean>(false);
   const [checkError, setCheckError] = useState<string | null>(null);
+  const [age, setAge] = useState<number | ''>('');
+  const [gender, setGender] = useState<string>('');
   const router = useRouter();
-
 
   const handleSeePassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setPasswordFieldType((prevType) => (prevType === 'password' ? 'text' : 'password'));
   };
 
-  const handleRegister = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleRegister = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    if (!email || !password || !confirmPassword) {
+    if (!email || !password || !age || !gender) {
       setError('Please fill in all the fields.');
       return;
     }
@@ -36,8 +36,8 @@ const RegisterForm = () => {
       return;
     }
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match!');
+    if(age < 18) {
+      setError('You must be at least 18 years old to register.');
       return;
     }
 
@@ -46,10 +46,36 @@ const RegisterForm = () => {
       return;
     }
 
-    setError(null);
-    setCheckError(null);
-    router.push(AppRoutes.HOME)
-    console.log(email, password, confirmPassword);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError('Password must contain at least one number and one uppercase letter.');
+      return;
+    }
+
+    const response = await fetch('http://localhost:8000/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password, age, gender }),
+    });
+
+    const data = await response.json();
+
+    if (data["status"] === "error") {
+      setError(data["message"]);
+      return;
+    }else{
+      setError(null);
+      setCheckError(null);
+      router.push(AppRoutes.HOME);
+    }
   };
 
   return (
@@ -90,21 +116,34 @@ const RegisterForm = () => {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-col gap-1">
-        <label htmlFor="confirmPassword" className="self-start font-semibold leading-6 text-black">
-          Confirm Password
-        </label>
-        <div className="flex gap-5 justify-between pr-4 leading-6 rounded-md border border-solid border-neutral-200 text-zinc-400 max-md:max-w-full">
+      <div className="mt-4 flex gap-5">
+        <div className="flex flex-col gap-1 w-1/2">
+          <label htmlFor="age" className="self-start font-semibold leading-6 text-black">
+            Age
+          </label>
           <Input
-            onChange={(e: any) => setConfirmPassword(e.target.value)}
-            placeholder="Enter password again"
-            className="bg-transparent border-none outline-none w-full"
-            type={passwordFieldType}
+            type="number"
+            value={age}
+            onChange={(e: any) => setAge(e.target.value)}
+            placeholder="Enter your age"
             required
           />
-          <button onClick={handleSeePassword}>
-            <EyeIcon className="text-zinc-500 size-4" />
-          </button>
+        </div>
+
+        <div className="flex flex-col gap-1 w-1/2">
+          <label htmlFor="gender" className="self-start font-semibold leading-6 text-black">
+            Gender
+          </label>
+          <select
+            value={gender}
+            onChange={(e: any) => setGender(e.target.value)}
+            required
+            className="border border-neutral-200 rounded-md px-4 py-2"
+          >
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
         </div>
       </div>
 
@@ -126,7 +165,7 @@ const RegisterForm = () => {
       {checkError && <div className="text-red-600 text-sm mt-2">{checkError}</div>}
 
       <div className="mt-10 lg:mt-16">
-        <Button type="button" className='w-full' onClick={handleRegister}>
+        <Button type="button" className="w-full" onClick={handleRegister}>
           Register
         </Button>
       </div>
