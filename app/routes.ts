@@ -4,4 +4,5 @@ export enum AppRoutes {
     LOGIN = '/login',
     FORGET_PASSWORD = '/forget-password',
     CHANGE_PASSWORD = '/change-password',
+    DASHBOARD = '/dashboard',
 }
