@@ -13,13 +13,13 @@ const LoginForm = () => {
   const [passwordFieldType, setPasswordFieldType] = useState<string>('password');
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  
+
   const handleSeePassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setPasswordFieldType((prevType) => (prevType === 'password' ? 'text' : 'password'));
   };
 
-  const handleLogin = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     if (!email || !password) {
@@ -32,9 +32,36 @@ const LoginForm = () => {
       return;
     }
 
-    setError(null);
-    router.push(AppRoutes.HOME)
-    console.log('Logged in:', email, password);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError('Password must contain at least one number and one uppercase letter.');
+      return;
+    }
+
+    const response = await fetch('http://localhost:8000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+
+    if (data["status"] === "error") {
+      setError(data["message"]);
+      return;
+    } else {
+      setError(null);
+      router.push(AppRoutes.DASHBOARD);
+    }
   };
 
   return (
@@ -42,7 +69,7 @@ const LoginForm = () => {
       <div>
         <h2 className="self-start text-2xl lg:text-3xl font-bold text-black">Login</h2>
         <p className="self-start mt-2 leading-6 text-zinc-500">
-            Log in to your account by entering email and password.
+          Log in to your account by entering email and password.
         </p>
       </div>
 
@@ -60,12 +87,12 @@ const LoginForm = () => {
 
       <div className="mt-4 flex flex-col gap-1">
         <div className='flex items-center justify-between' >
-            <label htmlFor="password" className="self-start font-semibold leading-6 text-black">
-                Password
-            </label>
-            <Link href={AppRoutes.FORGET_PASSWORD} className="font-semibold text-primary underline">
-                Forgot your Password?
-            </Link>
+          <label htmlFor="password" className="self-start font-semibold leading-6 text-black">
+            Password
+          </label>
+          <Link href={AppRoutes.FORGET_PASSWORD} className="font-semibold text-primary underline">
+            Forgot your Password?
+          </Link>
         </div>
         <div className="flex gap-5 justify-between pr-4 leading-6 rounded-md border border-solid border-neutral-200 text-zinc-400 max-md:max-w-full">
           <Input

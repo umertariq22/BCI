@@ -64,6 +64,7 @@ const RegisterForm = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password, age, gender }),
+      credentials: 'include',
     });
 
     const data = await response.json();
@@ -74,7 +75,7 @@ const RegisterForm = () => {
     }else{
       setError(null);
       setCheckError(null);
-      router.push(AppRoutes.HOME);
+      router.push(AppRoutes.DASHBOARD);
     }
   };
 

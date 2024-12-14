@@ -1,6 +1,5 @@
 'use client';
 import "../globals.css";
-import Head from "next/head";
 import Sidebar from '../components/sidebar';
 import AccountDropdown from '../components/account-dropdown';
 

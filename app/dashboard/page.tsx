@@ -4,9 +4,7 @@ import { ArrowRightCircleIcon } from '@heroicons/react/24/outline';
 import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 import Button from '../components/ui/button';
-import Sidebar from '../components/sidebar';
 import SearchInput from '../components/ui/search-input';
-import AccountDropdown from '../components/account-dropdown';
 
 const Page = () => {
   const [search, setSearch] = useState("");
