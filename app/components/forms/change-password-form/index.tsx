@@ -6,7 +6,11 @@ import Button from '../../ui/button';
 import { useRouter } from 'next/navigation';
 import { AppRoutes } from '@/app/routes';
 
-const ChangePasswordForm = () => {
+interface ChangePasswordFormProps {
+  email: string;
+}
+
+const ChangePasswordForm:React.FC<ChangePasswordFormProps> = ({email}) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordFieldType, setPasswordFieldType] = useState<string>('password');
@@ -19,11 +23,17 @@ const ChangePasswordForm = () => {
     setPasswordFieldType((prevType) => (prevType === 'password' ? 'text' : 'password'));
   };
 
-  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async(event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     if (newPassword.length < 8) {
       setError('Password must be at least 8 characters long.');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      setError('Password must contain at least one number and one uppercase letter.');
       return;
     }
 
@@ -32,10 +42,26 @@ const ChangePasswordForm = () => {
       return;
     }
 
-    setError(null);
-    setSuccessMessage('Your password has been changed successfully.');
-    router.push(AppRoutes.LOGIN)
-    console.log('New Password:', newPassword);
+    const response = await fetch("http://localhost:8000/reset-password", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password: newPassword }),
+    });
+
+    const data = await response.json();
+
+    if (data.status === 'error') {
+      setError(data.message);
+      return;
+    } else {
+      setError(null);
+      setSuccessMessage('Password has been changed successfully.');
+      console.log('Password changed successfully');
+    }
+
+
   };
 
   return (

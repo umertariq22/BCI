@@ -3,50 +3,51 @@ import React, { useState } from 'react';
 import Input from '../../ui/input';
 import Button from '../../ui/button';
 import { useRouter } from 'next/navigation';
-import { AppRoutes } from '@/app/routes';
 
-interface ForgetPasswordFormProps {
-  setEmailParent: React.Dispatch<React.SetStateAction<string>>;
-  setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;
+interface OTPFormProps {
+  email: string;
+  setValidOtp: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ForgetPasswordForm: React.FC<ForgetPasswordFormProps> = ({ setEmailParent, setOtpSent }) => {
-  const [email, setEmail] = useState('');
+const OTPForm:React.FC<OTPFormProps> = ({email,setValidOtp}) => {
+  const [otp, setOtp] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const router = useRouter()
 
-  const handleSubmit = async(event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    if (!email) {
-      setError('Please enter your email.');
+    if (!otp) {
+      setError('Please enter the OTP.');
       return;
     }
 
-    const response = await fetch("http://localhost:8000/send-email", {
+    if (otp.length !== 6) {
+      setError('Please enter a valid OTP.');
+      return;
+    }
+
+    const response = await fetch("http://localhost:8000/validate-otp", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, otp }),
     });
-    
+
     const data = await response.json();
 
     if (data.status === 'error') {
       setError(data.message);
       return;
-    }else{
-      setEmailParent(email);
-      setOtpSent(true);
+    } else {
+      setValidOtp(true);
       setError(null);
-      setSuccessMessage('OTP has been sent to your email.');
-      console.log('Reset link sent to:', email);
+      setSuccessMessage('OTP has been verified.');
+      console.log('OTP verified');
     }
 
-
-    
   };
 
   return (
@@ -54,18 +55,18 @@ const ForgetPasswordForm: React.FC<ForgetPasswordFormProps> = ({ setEmailParent,
       <div>
         <h2 className="self-start text-2xl lg:text-3xl font-bold text-black">Forget Password</h2>
         <p className="self-start mt-2 leading-6 text-zinc-500">
-            Enter your email to change your password via email.
+            Enter OTP sent to your email to change your password.
         </p>
       </div>
 
       <div className="mt-9 flex flex-col gap-1">
         <label htmlFor="email" className="self-start font-semibold leading-6 text-black">
-          Email
+          OTP
         </label>
         <Input
-          onChange={(e: any) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          type="email"
+          onChange={(e: any) => setOtp(e.target.value)}
+          placeholder="Enter OTP sent to your email"
+          type="number"
           required
         />
       </div>
@@ -82,4 +83,4 @@ const ForgetPasswordForm: React.FC<ForgetPasswordFormProps> = ({ setEmailParent,
   );
 };
 
-export default ForgetPasswordForm;
+export default OTPForm;
