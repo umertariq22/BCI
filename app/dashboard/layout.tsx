@@ -11,10 +11,11 @@ export default function DashboardLayout({
 }>) {
     return (
 
-        <main>
+        <body className="overflow-hidden">
+            <main className="overflow-hidden">
             <div className='flex flex-col lg:flex-row'>
                 <Sidebar />
-                <div className='flex-1 flex flex-col p-5 lg:p-8'>
+                <div className='flex-1 flex flex-col pl-5 pr-5 pt-5 lg:pl-8 pr-8 pt-8'>
                     <div className='hidden lg:block self-end' >
                         <AccountDropdown />
                     </div>
@@ -24,5 +25,6 @@ export default function DashboardLayout({
                 </div>
             </div>
         </main>
+        </body>
     );
 }

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Logo from '@/app/assets/images/bci-logo.svg';
-import { Bars2Icon, HomeIcon, QuestionMarkCircleIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { Bars2Icon, ChatBubbleBottomCenterIcon, CpuChipIcon } from '@heroicons/react/24/outline';
 import { AppRoutes } from '@/app/routes';
 import { usePathname } from 'next/navigation';
 import AccountDropdown from '../account-dropdown';
@@ -61,14 +61,14 @@ const Sidebar = () => {
 
     const navLinks = [
         {
-            link: 'Home',
-            icon: <HomeIcon className='size-5' />,
-            href: AppRoutes.HOME,
+            link: 'Chat',
+            icon: <ChatBubbleBottomCenterIcon className='size-5' />,
+            href: AppRoutes.DASHBOARD,
         },
         {
-            link: 'How it works',
-            icon: <QuestionMarkCircleIcon className='size-5' />,
-            href: '#',
+            link: 'Model Training',
+            icon: <CpuChipIcon className='size-5' />,
+            href: AppRoutes.MODEL_TRAINING,
         },
     ]
 
