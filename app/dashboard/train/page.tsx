@@ -1,15 +1,39 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../../components/ui/button';
 import Link from 'next/link';
 import { AppRoutes } from '../../routes';
 
 export default function Page() {
+
+  const [isModelTrained, setIsModelTrained] = useState(false);
+
   const keypoints = [
     'Please stay calm and focused during the reading session.',
     'We will capture your brain activity to improve the model’s accuracy.',
     'Ensure you are in a quiet, comfortable environment for optimal results.'
   ]
+
+  async function check_model_trained() {
+    const response = await fetch('http://localhost:8000/check-model-status', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+    if(data['status'] === 'success') {
+      setIsModelTrained(true);
+    }
+  }
+
+  useEffect(() => {
+    check_model_trained();
+  }, []);
+
+
     return (
           <div className='max-w-4xl mx-auto'>
             <div className='text-sm lg:text-base '>
@@ -31,9 +55,16 @@ export default function Page() {
                     ))}
                   </div>
                 </div>
-                <Link href={AppRoutes.READING} >
+                {!isModelTrained && <Link href={AppRoutes.READING} >
                   <Button className='mt-6' >Start Reading</Button>
-                </Link>
+                </Link>}
+                {isModelTrained && <div>
+                    <p className='text-green-600 mt-5' >Your model is trained and ready to use!</p>
+                    <Link href={AppRoutes.DASHBOARD} >
+                      <Button className='mt-6'>Go to Dashboard</Button>
+                    </Link>
+                  </div>}
+
               </div>
             </div>
           </div>

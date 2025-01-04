@@ -12,10 +12,57 @@ const Stopwatch: React.FC<StopwatchProps> = ({ currentState }) => {
     const [isRunning, setIsRunning] = useState(false);
     const [showStopConfirmModal, setShowStopConfirmModal] = useState(false);
 
+    const startRequest = async () => {
+        const response = await fetch('http://localhost:8000/start-collection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ time,state:currentState }),
+            credentials: 'include',
+        });
+        const data = await response.json();
+        if (data["status"] == "success") {
+            setIsRunning(true);
+        }
+    }
+    const stopRequest = async () => {
+        const response = await fetch('http://localhost:8000/stop-collection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ time,state:currentState }),
+            credentials: 'include',
+        });
+
+        const data = await response.json();
+        if (data["status"] == "success") {
+            setIsRunning(false);
+        }
+    }
+
+    const timeCompleted = async () => {
+        const response = await fetch('http://localhost:8000/data-collected', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ time,state:currentState }),
+            credentials: 'include',
+        });
+
+        const data = await response.json();
+        if (data["status"] == "success") {
+            window.location.reload();
+        }
+    
+    }
 
     useEffect(() => {
         setTime(1200000);
         setIsRunning(false);
+        stopRequest();
     }, [currentState]);
 
     useEffect(() => {
@@ -27,6 +74,11 @@ const Stopwatch: React.FC<StopwatchProps> = ({ currentState }) => {
             }, 10);
         } else if (!isRunning && timer) {
             clearInterval(timer);
+        } else if (time <= 0) {
+            // TODO: Send a request to the server to stop recording the data and mark the current state data collection as complete
+            stopRequest();
+            timeCompleted();
+            setTime(1200000);
         }
 
         return () => {
@@ -42,39 +94,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({ currentState }) => {
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(milliseconds).padStart(2, '0')}`;
     };
 
-    const startRequest = async () => {
-        const response = await fetch('/api/start', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ time,state:currentState }),
-        });
-
-        if (response.ok) {
-            setIsRunning(true);
-        }
-
-        console.log("Start Request Sent");
-        setIsRunning(true);
-    }
-
-    const stopRequest = async () => {
-        const response = await fetch('/api/stop', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ time,state:currentState }),
-        });
-
-        if (response.ok) {
-            setIsRunning(false);
-        }
-
-        console.log("Stop Request Sent");
-        setIsRunning(false);
-    }
+    
 
     // const resetRequest = async () => {
     //     const response = await fetch('/api/reset', {
