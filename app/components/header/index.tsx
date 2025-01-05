@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogPanel } from "@headlessui/react";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,11 +12,37 @@ const navigation = [
     { name: 'About Us', href: AppRoutes.ABOUT },
     { name: 'How it works?', href: AppRoutes.HOW_IT_WORKS },
     { name: 'Contact Us', href: AppRoutes.CONTACT },
-  ]
-  
+]
+
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false)
+
+    const checkLogin = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/validate_token", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
+
+            const data = await response.json();
+            setIsLoggedIn(data.status === "success");
+        } catch (error) {
+            console.error("Error checking login status:", error);
+        } finally {
+            setIsLoaded(true); // Ensure this is updated no matter what
+        }
+    };
+
+    useEffect(() => {
+        checkLogin()
+    }, [])
+
     return (
         <header className="absolute inset-x-0 top-0 z-50">
             <nav aria-label="Global" className="flex items-center justify-between py-6 px-4 lg:px-8">
@@ -48,12 +74,25 @@ export default function Header() {
                     ))}
                 </div>
                 <div className="hidden lg:flex items-center gap-5 lg:flex-1 lg:justify-end">
-                    <Link href={AppRoutes.LOGIN} className="text-sm/6 font-semibold text-gray-900">
-                        Log in
-                    </Link>
-                    <Link href={AppRoutes.REGISTER} className='bg-secondary px-4 py-2 rounded-full font-medium text-white' >
-                        Register
-                    </Link>
+                    {isLoaded ? (
+                        isLoggedIn ? (
+                            <Link href={AppRoutes.DASHBOARD} className="bg-secondary px-4 py-2 rounded-full font-medium text-white">
+                                Dashboard
+                            </Link>
+                        ) : (
+                            <>
+                                <Link href={AppRoutes.LOGIN} className="text-sm/6 font-semibold text-gray-900">
+                                    Log in
+                                </Link>
+                                <Link href={AppRoutes.REGISTER} className="bg-secondary px-4 py-2 rounded-full font-medium text-white">
+                                    Register
+                                </Link>
+                            </>
+                        )
+                    ) : (
+                        // Optionally, you can add a placeholder or spinner here
+                        <div className="animate-pulse px-4 py-2 text-gray-400">Loading...</div>
+                    )}
                 </div>
             </nav>
             <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -82,11 +121,11 @@ export default function Header() {
                             <div className="space-y-2 py-6">
                                 {navigation.map((item) => (
                                     <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                                        key={item.name}
+                                        href={item.href}
+                                        className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                                     >
-                                    {item.name}
+                                        {item.name}
                                     </Link>
                                 ))}
                             </div>

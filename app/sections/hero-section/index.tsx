@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link'
+import { AppRoutes } from '@/app/routes';
 
 export default function Example() {
 
@@ -26,7 +27,7 @@ export default function Example() {
           <div className="hidden sm:mb-8 sm:flex sm:justify-center">
             <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
               Announcing our brand new feature.{' '}
-              <Link href="#" className="font-semibold text-primary">
+              <Link href={AppRoutes.ABOUT} className="font-semibold text-primary">
                 <span aria-hidden="true" className="absolute inset-0" />
                 Read more <span aria-hidden="true">&rarr;</span>
               </Link>
@@ -41,12 +42,12 @@ export default function Example() {
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
-                href="#"
+                href={AppRoutes.DASHBOARD}
                 className="rounded-full bg-secondary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Get started
               </Link>
-              <Link href="#" className="text-sm/6 font-semibold text-gray-900">
+              <Link href={AppRoutes.ABOUT} className="text-sm/6 font-semibold text-gray-900">
                 Learn more <span aria-hidden="true">→</span>
               </Link>
             </div>

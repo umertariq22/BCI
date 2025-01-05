@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import Button from '../../components/ui/button';
 import Link from 'next/link';
 import { AppRoutes } from '../../routes';
+import Loader from '@/app/components/ui/loader';
 
 export default function Page() {
 
   const [isModelTrained, setIsModelTrained] = useState(false);
+  const [isLoaded,setIsLoaded] = useState(false);
 
   const keypoints = [
     'Please stay calm and focused during the reading session.',
@@ -27,12 +29,18 @@ export default function Page() {
     if(data['status'] === 'success') {
       setIsModelTrained(true);
     }
+    setIsLoaded(true);
   }
 
   useEffect(() => {
     check_model_trained();
   }, []);
 
+  if (!isLoaded){
+    return <>
+      <Loader />
+    </>
+  }
 
     return (
           <div className='max-w-4xl mx-auto'>

@@ -9,4 +9,5 @@ export enum AppRoutes {
     ABOUT = '/about-us',
     HOW_IT_WORKS = '/how-it-works',
     CONTACT = '/contact',
+    CHAT = '/dashboard/chat'
 }
