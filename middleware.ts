@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
     const cookie = req.cookies.toString();
     
     // Validate the token by sending the cookies to the backend
-    const response = await fetch("http://localhost:8000/validate_token", {
+    const response = await fetch("http://127.0.0.1:8000/validate_token", {
         method: "GET",
         credentials: "include", // Ensures the fetch includes cookies
         headers: {

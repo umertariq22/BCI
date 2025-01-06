@@ -52,7 +52,7 @@ const Page = () => {
       })
       const data = await response.json()
       console.log(data)
-    },1000);
+    },6000);
 
 
     return () => {
