@@ -35,7 +35,7 @@ const Page = () => {
       // Start WebSocket connection once EEG is connected
       startClassification();
     } else {
-      // setEEGConnection(false);
+      setEEGConnection(false);
     }
 
     setIsLoaded(true);
