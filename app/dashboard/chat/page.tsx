@@ -53,7 +53,8 @@ const Page = () => {
       if (message === "stop") {
         websocket.close();
       } else {
-        setPrediction(message);  // Update prediction
+        setPrediction(message);
+        console.log(message)  // Update prediction
       }
     };
 
