@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface CircularKeyboardProps {
   onKeyPress: (key: string) => void;
+  prediction: string;
+  predictionCount: number;
 }
 
-const CircularKeyboard: React.FC<CircularKeyboardProps> = ({ onKeyPress }) => {
+const CircularKeyboard: React.FC<CircularKeyboardProps> = ({ onKeyPress,prediction,predictionCount }) => {
+  const [currentKey,setCurrentKey] = useState('A');
   const keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   const specialKeys = ['Backspace', 'Space', 'Enter'];
 
@@ -13,6 +16,19 @@ const CircularKeyboard: React.FC<CircularKeyboardProps> = ({ onKeyPress }) => {
   const handleKeyPress = (key: string) => {
     onKeyPress(key);
   };
+
+  useEffect(() => {
+    let index = allKeys.indexOf(currentKey);
+    if (prediction === "Relaxing"){
+      let newIndex = (index + 1) % allKeys.length;
+      setCurrentKey(allKeys[newIndex]);
+    }else if (prediction === "Focused"){
+      let newIndex = (index - 1 + allKeys.length) % allKeys.length;
+      setCurrentKey(allKeys[newIndex]);
+    }else if (prediction === "Blink"){
+      handleKeyPress(currentKey);
+    }
+  },[predictionCount])
 
   return (
     <div className="scale-[60%] lg:scale-100 relative lg:my-20 w-[400px] h-[400px] mx-auto bg-gray-50 lg:border-4 border-primary flex items-center justify-center rounded-full">
@@ -38,7 +54,7 @@ const CircularKeyboard: React.FC<CircularKeyboardProps> = ({ onKeyPress }) => {
           return (
             <button
               key={key}
-              className={`${isSpecialKey ? 'w-28' : 'w-11'} bg-secondary border-4 border-primary absolute h-11 rounded-full text-primary hover:bg-primary hover:text-white font-bold active:bg-gray-500 flex items-center justify-center text-sm`}
+              className={`${isSpecialKey ? 'w-28' : 'w-11'} ${currentKey === key ? 'bg-primary text-white' : 'bg-secondary text-primary'}  border-4 border-primary absolute h-11 rounded-full hover:bg-primary hover:text-white font-bold active:bg-gray-500 flex items-center justify-center text-sm  `}
               style={{
                 transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
               }}

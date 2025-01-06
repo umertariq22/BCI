@@ -7,9 +7,10 @@ import Loader from '@/app/components/ui/loader';
 
 const Page = () => {
   const [search, setSearch] = useState('');
-  const [eegConnection, setEEGConnection] = useState(false);
+  const [eegConnection, setEEGConnection] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [prediction, setPrediction] = useState('');
+  const [predictionCount, setPredictionCount] = useState(0);
   const websocketRef = useRef<WebSocket | null>(null);
 
   const handleChange = (input: string) => {
@@ -34,7 +35,7 @@ const Page = () => {
       // Start WebSocket connection once EEG is connected
       startClassification();
     } else {
-      setEEGConnection(false);
+      //setEEGConnection(false);
     }
 
     setIsLoaded(true);
@@ -54,7 +55,8 @@ const Page = () => {
         websocket.close();
       } else {
         setPrediction(message);
-        console.log(message)  // Update prediction
+        setPredictionCount((prev) => prev + 1);
+        console.log(message) 
       }
     };
 
@@ -68,13 +70,13 @@ const Page = () => {
       setEEGConnection(false);
     };
 
-    websocketRef.current = websocket;  // Store the WebSocket connection
+    websocketRef.current = websocket; 
   };
 
   const stopEEG = () => {
     if (websocketRef.current) {
-      websocketRef.current.send("stop"); // Send "stop" signal to backend
-      websocketRef.current.close();  // Close the WebSocket connection
+      websocketRef.current.send("stop");
+      websocketRef.current.close(); 
     }
   };
 
@@ -92,6 +94,9 @@ const Page = () => {
       setSearch((prev) => prev.slice(0, -1));
     } else if (key === 'Enter') {
       console.log('Search submitted:', search);
+      const link = "https://www.google.com/search?q=" + search;
+      window.open(link, "_blank");
+      
     } else {
       setSearch((prev) => prev + key);
     }
@@ -110,7 +115,7 @@ const Page = () => {
             <SearchInput input={search} onChange={(e: any) => handleChange(e.target.value)} />
             <h1 className='mt-8 text-lg font-semibold'>My Virtual Keyboard</h1>
             <div className="flex justify-center">
-              <CircularKeyboard onKeyPress={handleKeyPress} />
+              <CircularKeyboard onKeyPress={handleKeyPress} prediction={prediction} predictionCount={predictionCount} />
             </div>
             <div className='mt-4 text-lg'>Prediction: {prediction}</div>
             <div className='mt-8'>
