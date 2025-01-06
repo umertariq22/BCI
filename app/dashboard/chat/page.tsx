@@ -41,8 +41,23 @@ const Page = () => {
 
   useEffect(() => {
     startEEG();
+
+    const IntervalID = setInterval(async() => {
+      const response = await fetch("http://localhost:8000/predict",{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+      })
+      const data = await response.json()
+      console.log(data)
+    },1000);
+
+
     return () => {
       stopEEG();
+      clearInterval(IntervalID);
     }
   }, [])
 
