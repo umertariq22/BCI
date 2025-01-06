@@ -80,6 +80,8 @@ const Page = () => {
   useEffect(() => {
     startEEG();
 
+
+
     return () => {
       if (websocketRef.current) {
         websocketRef.current.send("stop");
