@@ -11,8 +11,8 @@ export default function DashboardLayout({
 }>) {
     return (
 
-        <body className="overflow-hidden">
-            <main className="overflow-hidden">
+        <body>
+            <main>
             <div className='flex flex-col lg:flex-row'>
                 <Sidebar />
                 <div className='flex-1 flex flex-col pl-5 pr-5 pt-5 lg:pl-8 pr-8 pt-8'>

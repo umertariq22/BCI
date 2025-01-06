@@ -35,7 +35,7 @@ const Page = () => {
       // Start WebSocket connection once EEG is connected
       startClassification();
     } else {
-      //setEEGConnection(false);
+      // setEEGConnection(false);
     }
 
     setIsLoaded(true);
@@ -113,13 +113,12 @@ const Page = () => {
           <div className='max-w-4xl mx-auto'>
             <h1 className='text-xl font-semibold lg:text-2xl'>What can I help you with?</h1>
             <SearchInput input={search} onChange={(e: any) => handleChange(e.target.value)} />
-            <h1 className='mt-8 text-lg font-semibold'>My Virtual Keyboard</h1>
+            <div className='flex justify-between mt-4 items-center'>
+              <h1 className='text-lg font-semibold'>Prediction: {prediction}</h1>
+              <Button onClick={stopEEG}>Stop EEG</Button>  {/* Stop EEG Button */}
+            </div>
             <div className="flex justify-center">
               <CircularKeyboard onKeyPress={handleKeyPress} prediction={prediction} predictionCount={predictionCount} />
-            </div>
-            <div className='mt-4 text-lg'>Prediction: {prediction}</div>
-            <div className='mt-8'>
-              <Button onClick={stopEEG}>Stop EEG</Button>  {/* Stop EEG Button */}
             </div>
           </div>
         ) : (
