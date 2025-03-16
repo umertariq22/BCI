@@ -24,7 +24,7 @@ const ForgetPasswordForm: React.FC<ForgetPasswordFormProps> = ({ setEmailParent,
       return;
     }
 
-    const response = await fetch("http://localhost:8000/send-email", {
+    const response = await fetch("http://localhost:8000/users/send-otp", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

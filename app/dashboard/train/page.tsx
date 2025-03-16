@@ -17,7 +17,7 @@ export default function Page() {
   ]
 
   async function check_model_trained() {
-    const response = await fetch('http://localhost:8000/check-model-status', {
+    const response = await fetch('http://localhost:8000/model-training/check-model-status', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

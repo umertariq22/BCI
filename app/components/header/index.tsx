@@ -22,8 +22,8 @@ export default function Header() {
 
     const checkLogin = async () => {
         try {
-            const response = await fetch("http://localhost:8000/validate_token", {
-                method: "GET",
+            const response = await fetch("http://localhost:8000/users/validate-token", {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -130,12 +130,25 @@ export default function Header() {
                                 ))}
                             </div>
                             <div className="py-6">
-                                <Link
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                                >
-                                    Log in
-                                </Link>
+                                {isLoaded ? (
+                                    isLoggedIn ? (
+                                        <Link href={AppRoutes.DASHBOARD} className="bg-secondary px-4 py-2 rounded-full font-medium text-white">
+                                            Dashboard
+                                        </Link>
+                                    ) : (
+                                        <>
+                                            <Link href={AppRoutes.LOGIN} className="text-sm/6 font-semibold text-gray-900">
+                                                Log in
+                                            </Link>
+                                            <Link href={AppRoutes.REGISTER} className="bg-secondary px-4 py-2 rounded-full font-medium text-white">
+                                                Register
+                                            </Link>
+                                        </>
+                                    )
+                                ) : (
+                                    // Optionally, you can add a placeholder or spinner here
+                                    <div className="animate-pulse px-4 py-2 text-gray-400">Loading...</div>
+                                )}
                             </div>
                         </div>
                     </div>

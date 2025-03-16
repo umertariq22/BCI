@@ -20,7 +20,7 @@ const Page = () => {
   const startEEG = async () => {
     setIsLoaded(false);
     
-    const response = await fetch("http://localhost:8000/connect-egg", {
+    const response = await fetch("http://localhost:8000/model-prediction/connect-egg", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const Page = () => {
   };
 
   const startClassification = () => {
-    const websocket = new WebSocket("ws://localhost:8000/ws/predict");
+    const websocket = new WebSocket("ws://localhost:8000/model-prediction/ws/predict");
 
     websocket.onopen = () => {
       console.log("WebSocket connected");

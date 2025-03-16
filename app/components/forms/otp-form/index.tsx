@@ -28,7 +28,7 @@ const OTPForm:React.FC<OTPFormProps> = ({email,setValidOtp}) => {
       return;
     }
 
-    const response = await fetch("http://localhost:8000/validate-otp", {
+    const response = await fetch("http://localhost:8000/users/validate-otp", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

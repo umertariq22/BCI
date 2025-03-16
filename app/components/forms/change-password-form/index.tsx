@@ -42,7 +42,7 @@ const ChangePasswordForm:React.FC<ChangePasswordFormProps> = ({email}) => {
       return;
     }
 
-    const response = await fetch("http://localhost:8000/reset-password", {
+    const response = await fetch("http://localhost:8000/users/reset-password", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

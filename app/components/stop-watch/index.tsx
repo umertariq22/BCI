@@ -13,7 +13,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({ currentState }) => {
     const [showStopConfirmModal, setShowStopConfirmModal] = useState(false);
 
     const startRequest = async () => {
-        const response = await fetch('http://localhost:8000/start-collection', {
+        const response = await fetch('http://localhost:8000/model-training/start-collection', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({ currentState }) => {
         }
     }
     const stopRequest = async () => {
-        const response = await fetch('http://localhost:8000/stop-collection', {
+        const response = await fetch('http://localhost:8000/model-training/stop-collection', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({ currentState }) => {
     }
 
     const timeCompleted = async () => {
-        const response = await fetch('http://localhost:8000/data-collected', {
+        const response = await fetch('http://localhost:8000/model-training/data-collected', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

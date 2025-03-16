@@ -19,7 +19,7 @@ export default function Page() {
   trainingDoneRef.current = trainingDone;
 
   async function checkModelState() {
-    const response0 = await fetch("http://localhost:8000/check-model-status", {
+    const response0 = await fetch("http://localhost:8000/model-training/check-model-status", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export default function Page() {
 
   async function checkDataState() {
     await checkModelState()
-    const response = await fetch('http://localhost:8000/check-data-status', {
+    const response = await fetch('http://localhost:8000/model-training/check-data-status', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ export default function Page() {
       setRelaxedDataRecorded(true);
     }
 
-    const response2 = await fetch('http://localhost:8000/check-data-status', {
+    const response2 = await fetch('http://localhost:8000/model-training/check-data-status', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ export default function Page() {
   }
 
   async function handleStartTraining() {
-    await fetch('http://localhost:8000/train-model', {
+    await fetch('http://localhost:8000/model-training/train-model', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',

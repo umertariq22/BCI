@@ -58,7 +58,7 @@ const RegisterForm = () => {
       return;
     }
 
-    const response = await fetch('http://localhost:8000/signup', {
+    const response = await fetch('http://localhost:8000/users/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
