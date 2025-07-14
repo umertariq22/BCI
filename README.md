@@ -70,20 +70,10 @@ The app will be available at `http://localhost:3000`
 
 - **Framework**: Next.js (React)
 - **Styling**: Tailwind CSS
-- **State Management**: React Context / Zustand
 - **Communication**: WebSocket or REST (Axios/Fetch)
 
 ---
 
-## 🧪 Testing
-
-To run unit or integration tests:
-
-```bash
-npm run test
-```
-
----
 
 ## 📁 Folder Structure
 
